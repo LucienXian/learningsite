@@ -20,8 +20,8 @@
 					<div class="card fat">
 						<div class="card-body">
 							<h4 class="card-title">Register</h4>
-							<form method="POST">
-							 
+							<form method="POST"> {% csrf_token %}
+								{{errors}}
 								<div class="form-group">
 									<label for="name">Name</label>
 									<input id="name" type="text" class="form-control" name="name" required autofocus>
@@ -35,6 +35,11 @@
 								<div class="form-group">
 									<label for="password">Password</label>
 									<input id="password" type="password" class="form-control" name="password" required data-eye>
+								</div>
+
+								<div class="form-group">
+									<label for="confirmedpassword">Confirmed Password</label>
+									<input id="confirmedpassword" type="password" class="form-control" name="confirmedpassword" required data-eye>
 								</div>
 
 								<div class="form-group">
