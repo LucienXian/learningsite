@@ -21,7 +21,7 @@
 						<div class="card-body">
 							<h4 class="card-title">Login</h4>
 							<form method="POST">{% csrf_token %}
-							 
+								{{errors}}
 								<div class="form-group">
 									<label for="email">E-Mail Address</label>
 
