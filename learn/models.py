@@ -1,5 +1,5 @@
 from django.db import models
-from account.models import User
+from django.contrib.auth.models import User
 # Create your models here.
 class Word(models.Model):
     spelling = models.CharField(blank=False, max_length=100, verbose_name = u"拼写")

@@ -3,7 +3,7 @@ from django.contrib import auth
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password, check_password
-from django.contrib.auth.models import User
+
 
 from .forms import UserForm, UserFormLogin
 # import pdb
