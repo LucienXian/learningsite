@@ -1,0 +1,219 @@
+html {
+  overflow-y: scroll;
+}
+.wordbook-row {
+  padding: 20px 0 10px 0;
+}
+.create-wordbook-btn-area {
+  padding: 10px 0;
+}
+.create-wordlist-btn-area {
+  padding: 10px 0;
+}
+.my-wordbooks-row {
+  padding: 20px;
+}
+.my-wordbooks-row .activate {
+  margin-top: 5px;
+}
+#wordbook-save-div {
+  padding: 8px;
+}
+#wordbook-unsave-div {
+  padding: 8px;
+}
+.wordbook-short-description {
+  padding-top: 10px;
+  margin-top: 10px;
+  min-height: 60px;
+}
+.wordbook-brief-overview {
+  border-bottom: 1px dashed #CCCCCC;
+  min-height: 200px;
+}
+#wordbook-change-cover-form-container form {
+  margin: 0;
+}
+.wordbook-detail-container img {
+  width: 90px;
+}
+.wordbook-detail-container .wordbook-title {
+  font-size: 16px;
+  padding: 5px 0;
+  max-width: 150px;
+}
+.wordbook-detail-container .wordbook-owner {
+  padding: 2px 0;
+}
+.wordbook-detail-container .wordbook-count {
+  padding: 2px 0;
+}
+.wordbook-detail-container .row {
+  position: relative;
+}
+.wordbook-detail-container .wordbook-basic-info {
+  margin-bottom: 40px;
+}
+.wordbook-detail-container .btn-start-to-learn-wordbook {
+  position: absolute;
+  bottom: 0;
+}
+.wordbook-verify-comment {
+  margin-left: 0;
+}
+.wordbook-description {
+  margin-top: 20px;
+}
+.wordbook-operation-area {
+  text-align: center;
+}
+.wordbook-operation-area .wordbook-submit-button {
+  cursor: pointer;
+}
+.wordbook-operation-area p {
+  padding-top: 10px;
+}
+.float-right {
+  float: right;
+}
+.wordbook-in-sufficient-progress-hint {
+  margin-top: 20px;
+}
+#wordbook-category-list {
+  font-weight: bold;
+}
+#wordbook-extra-options {
+  font-weight: bold;
+}
+.start-to-learn-wordbook-hint #start-to-learn-wordbook-hint-modal .current_learning {
+  color: #209E85;
+}
+.start-to-learn-wordbook-hint #start-to-learn-wordbook-hint-modal .gonna_learn {
+  color: #CC0099;
+}
+table .wordbook-tr .title a {
+  font-size: 16px;
+}
+table .wordbook-tr .manage-wordbook-cover-container {
+  margin-right: 10px;
+}
+table .wordbook-tr .manage-wordbook-operation-area {
+  margin-top: 5px;
+}
+table td.wordbook-weight-td {
+  text-align: center;
+  font-size: 20px;
+  vertical-align: middle;
+}
+#reset-wordbook-confirm-modal-container #reset-wordbook-confirm-modal .modal-body p {
+  font-size: 16px;
+}
+#reset-wordbook-confirm-modal-container #reset-wordbook-confirm-modal .modal-body p .emphasize-green {
+  color: #209E85;
+}
+#reset-wordbook-confirm-modal-container #reset-wordbook-confirm-modal .modal-body ol {
+  color: #CC0099;
+  font-size: 14px;
+}
+.btn-add-new-unit-container {
+  margin-bottom: 10px;
+}
+#wordbook-unit-modal-container .modal-body input,
+#wordbook-unit-modification-modal-container .modal-body input {
+  width: 97%;
+}
+#wordbook-unit-modal-container .modal-body textarea,
+#wordbook-unit-modification-modal-container .modal-body textarea {
+  width: 97%;
+}
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-header h3 {
+  text-align: center;
+  color: #666;
+  font-weight: normal;
+}
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-body {
+  max-height: 510px;
+}
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-body .modal-body-loading {
+  text-align: center;
+}
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-body .modal-body-loading .spinner-container {
+  position: relative;
+  left: 50%;
+  padding-top: 20px;
+  padding-bottom: 30px;
+}
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-body .modal-body-loading p {
+  color: #209E85;
+}
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-body .modal-body-requirements {
+  color: #666;
+  font-size: 14px;
+  text-align: justify;
+}
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-body .modal-body-requirements li {
+  margin-bottom: 10px;
+}
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-body .modal-body-notice {
+  color: #ce4079;
+  font-size: 14px;
+  border-top: 1px solid #eee;
+  margin: 0px -15px;
+  padding: 10px 15px 0 25px;
+}
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-body .modal-body-notice ul {
+  list-style: none;
+  text-align: justify;
+  margin: 0;
+}
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-body .modal-body-notice ul li {
+  margin: 0 50px 10px 0;
+}
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-footer {
+  background: none;
+  border: none;
+}
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-footer-loading,
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-footer-top,
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-footer-bottom {
+  float: right;
+}
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-footer-loading .btn,
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-footer-top .btn,
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-footer-bottom .btn {
+  text-shadow: none;
+  color: #999;
+  background: none;
+  border: 1px solid #eee;
+  padding: 5px 24px;
+}
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-footer-loading .btn.cancel,
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-footer-top .btn.cancel,
+#submit-wordbook-modal-container #submit-wordbook-modal .modal-footer-bottom .btn.cancel {
+  box-shadow: none;
+  border: none;
+  margin-right: 15px;
+}
+.wordbook-containing-wordlist {
+  border-bottom: 1px solid #DDD;
+  margin-bottom: 10px;
+}
+.input-prepend .search-wordbooks-select {
+  width: 93px;
+  margin-right: 10px;
+  border: 0;
+  outline: 1px solid #CCC;
+  height: 28px;
+  margin-top: 1px;
+}
+.input-prepend .search-wordbooks-input {
+  border-radius: 0;
+}
+.input-prepend .search-wordbooks-submited {
+  height: 30px;
+  width: 28px;
+}
+span.wordbook-hint {
+  font-size: 16px;
+  color: #999999;
+}
