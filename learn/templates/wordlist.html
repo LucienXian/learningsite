@@ -53,7 +53,7 @@
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
               <li><a href="#">Home</a></li>
-              <li class="active"><a href="../wordbook">单词本</a></li>
+              <li class="active"><a href="#">单词本</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <div class="btn-group">
@@ -76,63 +76,41 @@
       <div class="container-fluid">
         <div class="row-fluid">
           <div class="col-md-8">
-                <div class="row wordbook-detail-container">
-                        <div class="col-md-10">
-                                <div class="wordbook-basic-info span3">
-                                        <div class="wordbook-title" style="max-width: 300px;">
-                                            <a href="wordbookunit?id={{wordbook_id}}">{{title}}</a>
-                                        </div>
-                                        <div class="wordbook-owner">
-                                            <span>上传者： </span>
-                                            
-                                                <span class="wordbook-owner-username">{{uploaded_user}}</span>
-                                            
-                                        </div>
-                                        <div class="wordbook-count">
-                                            <span>单词数： </span>{{word_num}}<br/>
-                                        </div>
-                                        <div>
-                                            <span>描述： </span>
-                                            <a target="_blank">{{description}}</a>
-                                        </div>
-                                </div>
-                        </div>
-                        <div class="col-md-2 col-sm-2">
-                                <button class="btn btn-primary btn-lg" id="wordbook-save-button">
-                                    <i class="icon-heart"></i>
-                                    收藏
-                                </button>
-                              </div>
-                         </div>
-            <!--主体内容-->
-            {% for unit in allunits %}
-            <div id="wordlist-" class="well">
-                <div class="wordbook-create-wordlist-title" style="display: block">
-                    <table width="100%">
-                        <tr>
-                            <td class="wordbook-wordlist-name">
-                                <a href="wordbookunit/wordlist?id={{unit.unit_id}}">{{unit.unit_name}}</a>
-                            </td>
-                            <td align="right" class="wordbook-wordlist-count">
-                                <span>单词数：</span>{{unit.word_num}}
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            
-                <div class="wordbook-create-wordlist-body">
-                    <div class="info">
-                        <table width="100%">
-                            <tr>
-                                <td>
-                                     <span class="author">作者： {{uploaded_user}}</span> 
-                                </td>
-                            </tr>
-                        </table>
+                <div class="well">
+                  <div class="row">
+                    <div class="span6">
+                      <h4>
+                        {{title}}---{{unit}}  ({{word_num}} 个单词)
+                      </h4>
+                      <p>作者：{{uploaded_user}}</p>
                     </div>
+                  </div>
+                  <div class="wordbook-contains-this-wordlist">
+                    <p>
+                        该单元属于单词书：
+                        <a href="{% url 'wordbookunit' %}?id={{wordbook_id}}">{{title}}</a>
+                        <a class="btn btn-success btn-mini" href="{% url 'wordbookunit' %}?id={{wordbook_id}}">查看</a>
+                    </p>
+                  </div>
                 </div>
-            </div>
-            {% endfor %}
+
+                <table class="table table-bordered table-striped">
+                    <caption>{{unit}}</caption>
+                    <thead>
+                        <tr>
+                          <th>单词</th>
+                          <th>意思</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for word in all_words %}
+                        <tr>
+                          <td><strong>{{word.spelling}}</strong></td>
+                          <td>{{word.mean}}</td>
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                </table>
           </div>
           <div class="col-md-4">
             <!--边栏内容-->
@@ -143,12 +121,13 @@
             <span class="hide" id="current-category-id">30</span>
             <ul class="nav nav-tabs nav-stacked">
                 {% for book in wordbook_info %}
-                    <li data="10"><a href="wordbookunit?id={{book.wordbook_id}}">{{book.title}}</a></li>
+                    <li data="10"><a href="{% url 'wordbookunit' %}?id={{book.wordbook_id}}">{{book.title}}</a></li>
                 {% endfor %}
             </ul>
           </div>
         </div> 
       </div>
+
 
     </div> <!-- /container -->
 
@@ -160,6 +139,6 @@
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="{% static 'js/ie10-viewport-bug-workaround.js'%}"></script>
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>
