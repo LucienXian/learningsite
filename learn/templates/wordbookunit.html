@@ -97,10 +97,12 @@
                                         </div>
                                 </div>
                         </div>
-                        <div class="col-md-2 col-sm-2">
-                                <button class="btn btn-primary btn-lg" id="wordbook-save-button">
+                        <div id="wordbook-save-div" class="col-md-2 col-sm-2">
+                                <button class="button btn btn-primary btn-lg" id="wordbook-save-button">
                                     <i class="icon-heart"></i>
-                                    收藏
+                                    <span>
+                                        收藏
+                                  </span>
                                 </button>
                               </div>
                          </div>
@@ -152,6 +154,7 @@
 
     </div> <!-- /container -->
 
+    <span id="wordbook-id-html" class="hide">{{wordbook_id}}</span>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -161,5 +164,10 @@
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="{% static 'js/ie10-viewport-bug-workaround.js'%}"></script>
+    <script>
+      $(".button").click(function() {
+        $(".button span").html($(".button span").text() == '收藏' ? '已收藏' : '收藏');
+   });
+    </script>
   </body>
 </html>
