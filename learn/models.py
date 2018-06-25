@@ -64,3 +64,17 @@ class WordInUnit(models.Model):
 
     def __unicode__(self):
         return u"{0} - unit {1}".format(self.word, self.wordunit)
+
+class LearningPlan(models.Model):
+    user = models.ForeignKey(User, verbose_name=u"用户", on_delete=models.CASCADE)
+    wordbook = models.ForeignKey(WordBook, verbose_name=u"单词本", on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = u"学习计划"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.__unicode__()
+
+    def __unicode__(self):
+        return u"{0} - {1}".format(self.user.username, self.wordbook)

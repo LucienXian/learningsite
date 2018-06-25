@@ -1,8 +1,15 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 
-from .models import WordBook, WordUnit, WordInUnit
+from .models import WordBook, WordUnit, WordInUnit, LearningPlan
+from learn.constants import *
 # Create your views here.
+
+try:
+    from django.utils import simplejson as json
+except ImportError:
+    import json
 
 def get_all_books():
     all_wordbooks = WordBook.objects.all()
@@ -47,6 +54,10 @@ def wordbookunit(request):
             passed['uploaded_user'] = get_book.uploaded_user.username
             passed['username'] = get_book.uploaded_user.username
             wordbookunit = WordUnit.objects.filter(book=get_book)
+            if LearningPlan.objects.filter(user=get_book.uploaded_user, wordbook=get_book).count() > 0:
+                passed['save_button_name'] = SAVE_BUTTON[1]
+            else:
+                passed['save_button_name'] = SAVE_BUTTON[0]
             wb_info = []
             for wb in wordbookunit:
                 info = {}
@@ -58,6 +69,18 @@ def wordbookunit(request):
             passed['allunits'] = wb_info
             passed['word_num'] = all_words_num   
             passed['wordbook_id'] = wordbook_id
+    if request.method == 'POST':
+        value = request.POST.get('value', None)
+        get_book = WordBook.objects.get(id=int(value))
+        if LearningPlan.objects.filter(user=get_book.uploaded_user, wordbook=get_book).count() > 0:
+            LearningPlan.objects.get(user=get_book.uploaded_user, wordbook=get_book).delete()
+        else:
+            lp = LearningPlan(user=get_book.uploaded_user, wordbook=get_book)
+            lp.save()
+        ctx = {'message': get_book.uploaded_user.username}
+        return HttpResponse(json.dumps(ctx), content_type='application/json')
+        #plan = LearningPlan(user=get_book.uploaded_user,wordbook=get_book)
+        #plan.save()
     return render(request, 'wordbookunit.html', passed)
 
 # @login_required

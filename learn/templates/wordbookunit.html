@@ -98,12 +98,7 @@
                                 </div>
                         </div>
                         <div id="wordbook-save-div" class="col-md-2 col-sm-2">
-                                <button class="button btn btn-primary btn-lg" id="wordbook-save-button">
-                                    <i class="icon-heart"></i>
-                                    <span>
-                                        收藏
-                                  </span>
-                                </button>
+                                <button class="btn btn-primary btn-lg" type="submit" id="wordbook-save-button"  name="save", value="{{wordbook_id}}">{{save_button_name}}</button>
                               </div>
                          </div>
             <!--主体内容-->
@@ -165,9 +160,20 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="{% static 'js/ie10-viewport-bug-workaround.js'%}"></script>
     <script>
-      $(".button").click(function() {
-        $(".button span").html($(".button span").text() == '收藏' ? '已收藏' : '收藏');
-   });
-    </script>
+        $('#wordbook-save-button').click(function(){
+              $.ajax({
+                       type: "POST",
+                       url: "{% url 'wordbookunit' %}",
+                       data: {'value': $(this).attr('value'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                       dataType: "json",
+                       success: function(response) {
+                          $("#wordbook-save-button").html($("#wordbook-save-button").text() == '收藏' ? '已收藏' : '收藏');
+                        },
+                        error: function(rs, e) {
+                               alert(rs.responseText);
+                        }
+                  }); 
+            })
+        </script>
   </body>
 </html>
