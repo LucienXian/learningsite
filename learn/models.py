@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
@@ -78,3 +80,22 @@ class LearningPlan(models.Model):
 
     def __unicode__(self):
         return u"{0} - {1}".format(self.user.username, self.wordbook)
+
+class LearningRecord(models.Model):
+    user = models.ForeignKey(User, verbose_name=u"用户", on_delete=models.CASCADE)
+    wordbook = models.ForeignKey(WordBook, verbose_name=u"单词本", on_delete=models.CASCADE)    
+    islearning = models.IntegerField(default=0, verbose_name=u"正在学习")
+    learn_time = models.DateTimeField(default=datetime.now,
+                                      verbose_name=u"学习时间")
+    duration = models.IntegerField(default=0, verbose_name=u"学习时长")
+    correct_rate = models.IntegerField(default=100, verbose_name=u"正确率")
+
+    class Meta:
+        verbose_name = u"学习记录"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.__unicode__()
+
+    def __unicode__(self):
+        return u"{0} - isornotlearning{1}".format(self.user.username, self.islearning)

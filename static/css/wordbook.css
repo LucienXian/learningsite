@@ -46,7 +46,7 @@ html {
   padding: 2px 0;
 }
 .wordbook-detail-container .wordbook-count {
-  padding: 2px 0;
+  padding: 2px 0px;
 }
 .wordbook-detail-container .row {
   position: relative;
@@ -57,6 +57,14 @@ html {
 .wordbook-detail-container .btn-start-to-learn-wordbook {
   position: absolute;
   bottom: 0;
+}
+.wordbook-detail-container .wordbook-learning {
+  padding: 2px 2px;
+}
+.wordbook-detail-container .wordbook-learning-title {
+  font-size: 16px;
+  padding: 5px 2px;
+  max-width: 150px;
 }
 .wordbook-verify-comment {
   margin-left: 0;

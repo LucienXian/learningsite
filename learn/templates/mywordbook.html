@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>{{username}}的单词本</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="{% static 'css/ie10-viewport-bug-workaround.css'%}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/navbar.css'%}" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="{% static 'js/ie-emulation-modes-warning.js'%}"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/wordbook.css'%}">
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <!-- Static navbar -->
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Project name</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="{% url 'mywordbook' %}">我的单词本</a></li>
+              <li><a href="{% url 'wordbook' %}">单词本</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <div class="btn-group">
+              <button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{username}} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="{% url 'mywordbook' %}">我的单词本</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">设置</a></li>
+                <li><a href="#">退出</a></li>
+              </ul>
+            </div>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>
+
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="container-fluid">
+        <div class="row-fluid">
+          <div class="col-md-8">
+                <div class="tabbable">
+                        <div class="tab-content">
+                            
+                            <div class="tab-pane active" id="wordbook-tab">
+                                <div class="hide">
+                            </div>
+                                
+                                <h3>正在学习的单词书</h3>
+                                <div class="alert alert-success" role="alert">
+                                    <div class="row">
+                                            
+                                        <div class="col-md-3 wordbook-detail-container">
+                                            <div class="row">
+                                                <div class="wordbook-basic-info span">
+                                                    <div title="{{ learningbook }}" class="wordbook-learning-title">
+                                                        <a href="{% url 'wordbookunit' %}?id={{learningbook_id}}" id="learningbook">{{ learningbook }}</a>
+                                                    </div>
+                                                    <div class="wordbook-learning">
+                                                                
+                                                        <span>单词数: </span> <span id="learningbook_num">{{ learningbook_num }}</span><br/>
+                                            
+                                                    </div>
+                                                    <div class="wordbook-learning">
+                                                                
+                                                        <span>学习进度: </span> <span id="learningbook_rate">{{ learningbook_rate }}&#37;</span>
+                                        
+                                                    </div>
+                                                            
+                                                    <div class="wordbook-learning">
+                                                                
+                                                        <span>完成时间： </span> <span id="learning_book_time">{{ learning_book_time }}</span>
+                                            
+                                                    </div>
+                                                            
+                                                </div>
+                                            </div>
+                                        </div>
+                                            
+                                    </div>
+                                </div>
+                                
+                                
+                                <h3>我收藏的单词书</h3>
+                                <span class="hide" id="delete-fail-prompt">删除单词书失败 </span>
+                                <span class="hide" id="delete-confirm-prompt">确定要删除这本单词书吗？ </span>
+                                <span class="hide" id="unsubscribe-fail-prompt">收藏单词书失败</span>
+                                {% for book in plan_book %}
+                                <div class="modal fade" id="myModal{{book.book_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                    <h4 class="modal-title" id="myModalLabel">更换单词书</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    你目前正在学习 单词书{{learningbook}}<br>
+                                                    确定更换为 单词书{{book.title}}吗？
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                                    <button type="button" class="btn btn-primary" id="submit_btn{{book.book_id}}" value="{{book.book_id}}" data-dismiss="modal">提交更改</button>
+                                                </div>
+                                            </div><!-- /.modal-content -->
+                                        </div><!-- /.modal-dialog -->
+                                </div>
+                                <div class="well">
+                                    <div class="row">
+                                            
+                                        <div class="col-md-3 wordbook-detail-container">
+                                            <div class="row">
+                                                
+                                                <div class="wordbook-basic-info span">
+                                                    <div title="{{book.title}}" class="wordbook-title">
+                                                        <a href="{% url 'wordbookunit' %}?id={{book.book_id}}">{{book.title}}</a>
+                                                    </div>
+                                                    <div class="wordbook-count">            
+                                                        <span>单词数: </span>{{book.num}}<br/>
+                                                    </div>
+                                                    <div id="wordbook-master-percent" class="wordbook-info">
+                                                                
+                                                        <span>学习进度: </span> {{book.rate}}&#37;
+                                    
+                                                    </div>
+                                                            
+                                                    <div class="activate">                
+                                                        <a class="btn btn-success btn-start-to-learn-wordbook"
+                                                            data-toggle="modal" data-target="#myModal{{book.book_id}}" href="#">
+                                                                            开始学习
+                                                        </a>
+                                                    </div>
+                                                    
+                                                            
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    $(function() {
+                                        $('#myModal{{book.book_id}}').modal('hide')
+                                    });
+                                </script>
+                                <script>
+                                        $('#submit_btn{{book.book_id}}').click(function(){
+                                              $.ajax({
+                                                        type: "POST",
+                                                        url: "{% url 'mywordbook' %}",
+                                                        data: {'value': $(this).attr('value'), 'learning_id': '{{ learningbook_id }}', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                                                        dataType: "json",
+                                                        success: function(response) {
+                                                            $('#learningbook').html(response.learningbook);
+                                                            $('#learningbook_num').html(response.learningbook_num);
+                                                            $('#learningbook_rate').html(response.learningbook_rate);
+                                                            $('#learning_book_time').html(response.learning_book_time);
+                                                        },
+                                                        error: function(rs, e) {
+                                                            alert(rs.responseText);
+                                                        }
+                                                  }); 
+                                            })
+                                </script>
+                                {% endfor %}
+
+
+                            </div>
+                        </div>
+                    </div>
+          </div>
+          <div class="col-md-4">
+            <!--边栏内容-->
+
+            <div class="page-header">
+                    <h3>单词书类型</h3>
+            </div>
+            <span class="hide" id="current-category-id">30</span>
+            <ul class="nav nav-tabs nav-stacked">
+                {% for book in wordbook_info %}
+                    <li data="10"><a href="{% url 'wordbookunit' %}?id={{book.wordbook_id}}">{{book.title}}</a></li>
+                {% endfor %}
+            </ul>
+          </div>
+        </div> 
+      </div>
+
+
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+    
+  </body>
+</html>
