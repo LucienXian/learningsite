@@ -7,4 +7,5 @@ urlpatterns = [
     path('wordbook/wordbookunit', views.wordbookunit, name='wordbookunit'),
     path('wordbook/wordbookunit/wordlist', views.wordlist, name='wordlist'),
     path('wordbook/mine', views.mywordbook, name='mywordbook'),
+    path('learnindex/', views.learnindex, name='learnindex'),
 ]

@@ -180,3 +180,16 @@ def mywordbook(request):
         return render(request, 'mywordbook.html', passed)
     else:
         return HttpResponse(json.dumps(passed, cls=DateEncoder), content_type='application/json')
+
+def learnindex(request):
+    user = User.objects.get(username=XTF)
+    lr = LearningRecord.objects.get(user=user, islearning=1)
+    learningbook = lr.wordbook
+    passed = {}
+    passed['username'] = user.username
+    passed['title'] = learningbook.title
+    passed['description'] = learningbook.description
+    passed['word_num'] = learningbook.word_num
+    passed['uploaded_user'] = learningbook.uploaded_user
+    
+    return render(request, "learnindex.html", passed)

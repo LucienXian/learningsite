@@ -47,9 +47,9 @@
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="{% url 'learnindex' %}">单词学习</a></li>
+                <li class="active"><a href="{% url 'wordbook' %}">单词学习</a></li>
                 <li><a href="{% url 'mywordbook' %}">我的单词本</a></li>
-                <li class="active"><a href="{% url 'wordbook' %}">单词本</a></li>
+                <li><a href="{% url 'wordbook' %}">单词本</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <div class="btn-group">
@@ -69,17 +69,64 @@
       </nav>
 
       <!-- Main component for a primary marketing message or call to action -->
-      {% for wordbook in data %}
-      <div class="jumbotron">
-        <h1>{{wordbook.title}}</h1>
-        <p>{{wordbook.description}}</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="wordbookunit?id={{wordbook.wordbook_id}}" role="button">Read More &raquo;</a>
-        </p>
-      </div>
-      {% endfor %}
+      
 
     </div> <!-- /container -->
+
+    <div class="container">
+
+            <hr>
+    
+            <div class="row">
+                <div class="col-sm-8">
+                    <h2>LX背单词</h2>
+                    <p>Word learning is not a day's work. It focuses on persistence, accumulation, and integration, accompanied by the entire process of language learning.There is no "scientific" learning method for word learning, and everyone can find a suitable method for him.</p>
+                    <p>单词学习非一日之功，重在坚持和积累，融会贯通，伴随着语言学习的整个过程。单词学习没有“最科学的”学习方法，每个人可以找到他适合的方法。</p>
+                    <p>
+                        <a class="btn btn-default btn-lg" href="#">Go to Action &raquo;</a>
+                    </p>
+                </div>
+                <div class="col-sm-4">
+                    <h2>{{title}}</h2>
+                    <address>
+                        <strong>{{description}}</strong>
+                        <br>单词总数：{{word_num}}
+                        <br>作者：{{uploaded_user}}
+                        <br>
+                    </address>
+                    <address>
+                        <abbr title="今日计划">P:</abbr>今日单词：{{plan_num}}
+                        <br>
+                        <abbr title="已学">E:</abbr>已学习：{{learned_num}}
+                    </address>
+                </div>
+            </div>
+            <!-- /.row -->
+    
+            <hr>
+                <div class="quote" id="quote">
+                    <blockquote>
+                        <p>
+                            No affection but interest can be found in the world of animals.<br>
+                            在动物的世界里，只有利益，没有感情。
+                        </p>
+                        <small>电影《动物世界》</small>
+                    </blockquote>
+                </div>
+            <hr>
+    
+            <!-- Footer -->
+            <footer>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p class="text-center">Copyright &copy; Lucien Words</p>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </footer>
+    
+        </div>
+        <!-- /.container -->
 
 
     <!-- Bootstrap core JavaScript

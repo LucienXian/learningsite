@@ -70,6 +70,7 @@ class WordInUnit(models.Model):
 class LearningPlan(models.Model):
     user = models.ForeignKey(User, verbose_name=u"用户", on_delete=models.CASCADE)
     wordbook = models.ForeignKey(WordBook, verbose_name=u"单词本", on_delete=models.CASCADE)
+    haslearned = models.IntegerField(default=0, verbose_name=u"已学习")
 
     class Meta:
         verbose_name = u"学习计划"
@@ -89,6 +90,7 @@ class LearningRecord(models.Model):
                                       verbose_name=u"学习时间")
     duration = models.IntegerField(default=0, verbose_name=u"学习时长")
     correct_rate = models.IntegerField(default=100, verbose_name=u"正确率")
+    haslearned = models.IntegerField(default=0, verbose_name=u"已经学习")
 
     class Meta:
         verbose_name = u"学习记录"
@@ -99,3 +101,17 @@ class LearningRecord(models.Model):
 
     def __unicode__(self):
         return u"{0} - isornotlearning{1}".format(self.user.username, self.islearning)
+
+class UserSetting(models.Model):
+    user = models.ForeignKey(User, verbose_name=u"用户", on_delete=models.CASCADE)
+    dailyword = models.IntegerField(default=50, verbose_name=u"每日学习量")
+
+    class Meta:
+        verbose_name = u"用户设置"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.__unicode__()
+
+    def __unicode__(self):
+        return u"{0} - {1}".format(self.user.username, self.dailyword)
