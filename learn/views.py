@@ -2,7 +2,7 @@ from django.shortcuts import render, render_to_response
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
-from .models import WordBook, WordUnit, WordInUnit, LearningPlan, LearningRecord
+from .models import WordBook, WordUnit, WordInUnit, LearningPlan, LearningRecord, UserSetting
 from learn.constants import *
 
 from django.contrib.auth.models import User
@@ -135,14 +135,10 @@ def mywordbook(request):
     passed['username'] = user.username
     passed['wordbook_info'] = get_all_books()
 
-    import pdb
     #pdb.set_trace()
     print(request.method)
     if request.method == 'POST' and request.is_ajax():
         value = request.POST.get('value', None)
-        
-        pdb.set_trace()
-        print(value)
         get_book = WordBook.objects.get(id=int(value))
         changedrecord = LearningRecord.objects.get(user=user, wordbook=get_book)
         changedrecord.islearning = 1
@@ -192,4 +188,36 @@ def learnindex(request):
     passed['word_num'] = learningbook.word_num
     passed['uploaded_user'] = learningbook.uploaded_user
     
+    setting = UserSetting.objects.get(user=user)
+    passed['plan_num'] = setting.dailyword
+    passed['learned_num'] = lr.haslearned
+
     return render(request, "learnindex.html", passed)
+
+def bdcsetting(request):
+    user = User.objects.get(username=XTF)
+    usersetting = UserSetting.objects.get(user=user)
+    ctx = {}
+    ctx['username'] = user.username
+    ctx['dailyword_list'] = dailyword_list
+    ctx['showmeaning_list'] = showmeaning_list
+    ctx['learntype_list'] = learntype_list
+    #if request.method == "GET":
+    #    ctx['dailyword'] = usersetting.dailyword
+    #    ctx['showmeaning'] = usersetting.showmeaning
+    #    ctx['learntype'] = usersetting.learntype
+        
+    if request.method == 'POST':
+        definition = request.POST.get('definition', None)
+        target_level = request.POST.get('target_level', None)
+        quota = request.POST.get('quota', None)
+        usersetting.dailyword = int(quota)
+        usersetting.showmeaning = int(definition)
+        usersetting.learntype = int(target_level)
+        usersetting.save()
+
+    ctx['dailyword'] = usersetting.dailyword
+    ctx['showmeaning'] = usersetting.showmeaning
+    ctx['learntype'] = usersetting.learntype
+
+    return render(request, "bdcsetting.html", ctx)

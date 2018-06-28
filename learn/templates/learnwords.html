@@ -22,6 +22,16 @@
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="{% static 'js/ie-emulation-modes-warning.js'%}"></script>
+    <style>
+        .borderless > thead > tr > th,
+        .borderless > tbody > tr > th,
+        .borderless > tfoot > tr > th,
+        .borderless > thead > tr > td,
+        .borderless > tbody > tr > td,
+        .borderless > tfoot > tr > td {
+            border-top: none;
+        }
+    </style>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -47,7 +57,7 @@
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="{% url 'learnindex' %}">单词学习</a></li>
+                <li><a href="{% url 'learnindex' %}">单词学习</a></li>
                 <li><a href="{% url 'mywordbook' %}">我的单词本</a></li>
                 <li><a href="{% url 'wordbook' %}">单词本</a></li>
             </ul>
@@ -69,27 +79,71 @@
       </nav>
 
       <!-- Main component for a primary marketing message or call to action -->
-      {% for wordbook in data %}
-      <div class="jumbotron">
-        <h1>{{wordbook.title}}</h1>
-        <p>{{wordbook.description}}</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="wordbookunit?id={{wordbook.wordbook_id}}" role="button">Read More &raquo;</a>
-        </p>
-      </div>
-      {% endfor %}
+      
 
     </div> <!-- /container -->
-    <hr>
-    <!-- Footer -->
-    <footer>
-        <div class="row">
-            <div class="col-lg-12">
-                <p class="text-center">Copyright &copy; Lucien Words</p>
+
+    <div class="container">    
+            <div class="row">
+              <div class="col-sm-4">
+                  <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">
+                          带有 title 的面板标题
+                        </h3>
+                      </div>
+                      <div class="panel-body">
+                        面板内容
+                        <button class="pull-right">
+                          学习
+                        </button>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-sm-4">
+                  <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">
+                          带有 title 的面板标题
+                        </h3>
+                      </div>
+                      <div class="panel-body">
+                        面板内容
+                        <button class="pull-right">
+                          学习
+                        </button>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-sm-4">
+                  <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">
+                          带有 title 的面板标题
+                        </h3>
+                      </div>
+                      <div class="panel-body">
+                        <button class="pull-right">
+                          学习
+                        </button>
+                      </div>
+                  </div>
+              </div>
             </div>
+            <!-- /.row -->
+            <hr>
+            <!-- Footer -->
+            <footer>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p class="text-center">Copyright &copy; Lucien Words</p>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </footer>
+    
         </div>
-        <!-- /.row -->
-    </footer>
+        <!-- /.container -->
 
 
     <!-- Bootstrap core JavaScript

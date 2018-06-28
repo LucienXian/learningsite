@@ -70,7 +70,6 @@ class WordInUnit(models.Model):
 class LearningPlan(models.Model):
     user = models.ForeignKey(User, verbose_name=u"用户", on_delete=models.CASCADE)
     wordbook = models.ForeignKey(WordBook, verbose_name=u"单词本", on_delete=models.CASCADE)
-    haslearned = models.IntegerField(default=0, verbose_name=u"已学习")
 
     class Meta:
         verbose_name = u"学习计划"
@@ -105,6 +104,8 @@ class LearningRecord(models.Model):
 class UserSetting(models.Model):
     user = models.ForeignKey(User, verbose_name=u"用户", on_delete=models.CASCADE)
     dailyword = models.IntegerField(default=50, verbose_name=u"每日学习量")
+    showmeaning = models.IntegerField(default=1, verbose_name=u"英文解释")
+    learntype = models.IntegerField(default=1, verbose_name=u"单词的目标掌握程度")
 
     class Meta:
         verbose_name = u"用户设置"

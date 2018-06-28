@@ -64,7 +64,7 @@
               <ul class="dropdown-menu">
                     <li><a href="{% url 'mywordbook' %}">我的单词本</a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#">设置</a></li>
+                <li><a href="{% url 'bdcsetting' %}">设置</a></li>
                 <li><a href="#">退出</a></li>
               </ul>
             </div>
@@ -72,10 +72,11 @@
           </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
       </nav>
+    </div> <!-- /container -->
 
       <!-- Main component for a primary marketing message or call to action -->
-      <div class="container-fluid">
-        <div class="row-fluid">
+      <div class="container">
+        <div class="row">
           <div class="col-md-8">
                 <div class="row wordbook-detail-container">
                         <div class="col-md-10">
@@ -147,8 +148,17 @@
           </div>
         </div> 
       </div>
+      <hr>
+      <!-- Footer -->
+      <footer>
+          <div class="row">
+              <div class="col-lg-12">
+                  <p class="text-center">Copyright &copy; Lucien Words</p>
+              </div>
+          </div>
+          <!-- /.row -->
+      </footer>
 
-    </div> <!-- /container -->
 
     <span id="wordbook-id-html" class="hide">{{wordbook_id}}</span>
 

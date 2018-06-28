@@ -64,7 +64,7 @@
               <ul class="dropdown-menu">
                 <li><a href="{% url 'mywordbook' %}">我的单词本</a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#">设置</a></li>
+                <li><a href="{% url 'bdcsetting' %}">设置</a></li>
                 <li><a href="#">退出</a></li>
               </ul>
             </div>
@@ -72,11 +72,11 @@
           </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
       </nav>
-
+    </div> <!-- /container -->
       <!-- Main component for a primary marketing message or call to action -->
-      <div class="container-fluid">
-        <div class="row-fluid">
-          <div class="col-md-8">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-8 col-md-8">
                 <div class="tabbable">
                         <div class="tab-content">
                             
@@ -123,25 +123,8 @@
                                 <span class="hide" id="delete-fail-prompt">删除单词书失败 </span>
                                 <span class="hide" id="delete-confirm-prompt">确定要删除这本单词书吗？ </span>
                                 <span class="hide" id="unsubscribe-fail-prompt">收藏单词书失败</span>
+                                
                                 {% for book in plan_book %}
-                                <div class="modal fade" id="myModal{{book.book_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                    <h4 class="modal-title" id="myModalLabel">更换单词书</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    你目前正在学习 单词书{{learningbook}}<br>
-                                                    确定更换为 单词书{{book.title}}吗？
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                                    <button type="button" class="btn btn-primary" id="submit_btn{{book.book_id}}" value="{{book.book_id}}" data-dismiss="modal">提交更改</button>
-                                                </div>
-                                            </div><!-- /.modal-content -->
-                                        </div><!-- /.modal-dialog -->
-                                </div>
                                 <div class="well">
                                     <div class="row">
                                             
@@ -162,10 +145,12 @@
                                                     </div>
                                                             
                                                     <div class="activate">                
-                                                        <a class="btn btn-success btn-start-to-learn-wordbook"
+                                                        <!--<a class="btn btn-success btn-start-to-learn-wordbook"
                                                             data-toggle="modal" data-target="#myModal{{book.book_id}}" href="#">
                                                                             开始学习
                                                         </a>
+                                                        -->
+                                                        <button class="btn btn-primary btn-start-to-learn-wordbook" data-toggle="modal" data-target="#myModal{{book.book_id}}">开始学习</button>
                                                     </div>
                                                     
                                                             
@@ -175,30 +160,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <script>
-                                    $(function() {
-                                        $('#myModal{{book.book_id}}').modal('hide')
-                                    });
-                                </script>
-                                <script>
-                                        $('#submit_btn{{book.book_id}}').click(function(){
-                                              $.ajax({
-                                                        type: "POST",
-                                                        url: "{% url 'mywordbook' %}",
-                                                        data: {'value': $(this).attr('value'), 'learning_id': '{{ learningbook_id }}', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-                                                        dataType: "json",
-                                                        success: function(response) {
-                                                            $('#learningbook').html(response.learningbook);
-                                                            $('#learningbook_num').html(response.learningbook_num);
-                                                            $('#learningbook_rate').html(response.learningbook_rate);
-                                                            $('#learning_book_time').html(response.learning_book_time);
-                                                        },
-                                                        error: function(rs, e) {
-                                                            alert(rs.responseText);
-                                                        }
-                                                  }); 
-                                            })
-                                </script>
                                 {% endfor %}
 
 
@@ -206,7 +167,7 @@
                         </div>
                     </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-sm-4 col-md-4">
             <!--边栏内容-->
 
             <div class="page-header">
@@ -223,7 +184,38 @@
       </div>
 
 
-    </div> <!-- /container -->
+    
+
+    {% for book in plan_book %}
+        <div class="modal fade" id="myModal{{book.book_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title" id="myModalLabel">更换单词书</h4>
+                        </div>
+                        <div class="modal-body">
+                            你目前正在学习 单词书{{learningbook}}<br>
+                            确定更换为 单词书{{book.title}}吗？
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="button" class="btn btn-primary" id="submit_btn{{book.book_id}}" value="{{book.book_id}}" data-dismiss="modal">提交更改</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+        </div>
+    {% endfor %}
+    <hr>
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-lg-12">
+                <p class="text-center">Copyright &copy; Lucien Words</p>
+            </div>
+        </div>
+        <!-- /.row -->
+    </footer>
 
 
     <!-- Bootstrap core JavaScript
@@ -234,6 +226,31 @@
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
-    
+    {% for book in plan_book %}
+    <script>
+        $(function() {
+            $('#myModal{{book.book_id}}').modal('hide')
+        });
+    </script>
+    <script>
+            $('#submit_btn{{book.book_id}}').click(function(){
+                  $.ajax({
+                            type: "POST",
+                            url: "{% url 'mywordbook' %}",
+                            data: {'value': $(this).attr('value'), 'learning_id': '{{ learningbook_id }}', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                            dataType: "json",
+                            success: function(response) {
+                                $('#learningbook').html(response.learningbook);
+                                $('#learningbook_num').html(response.learningbook_num);
+                                $('#learningbook_rate').html(response.learningbook_rate);
+                                $('#learning_book_time').html(response.learning_book_time);
+                            },
+                            error: function(rs, e) {
+                                alert(rs.responseText);
+                            }
+                      }); 
+                })
+    </script>
+    {% endfor %}
   </body>
 </html>

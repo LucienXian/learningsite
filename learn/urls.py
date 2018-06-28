@@ -8,4 +8,5 @@ urlpatterns = [
     path('wordbook/wordbookunit/wordlist', views.wordlist, name='wordlist'),
     path('wordbook/mine', views.mywordbook, name='mywordbook'),
     path('learnindex/', views.learnindex, name='learnindex'),
+    path('bdcsetting/', views.bdcsetting, name='bdcsetting'),
 ]

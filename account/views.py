@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password, check_password
 
+from learn.models import UserSetting
 
 from .forms import UserForm, UserFormLogin
 # import pdb
@@ -57,6 +58,8 @@ def register(request):
             
             user = User(username=username,password=make_password(password),email=email)
             user.save()
+            setting = UserSetting(user=user)
+            setting.save()
             return render(request,'success.html',{'operation':"注册"})
         else:
             return render(request,'register.html',{'form': message})
