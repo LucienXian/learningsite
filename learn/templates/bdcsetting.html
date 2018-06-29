@@ -57,9 +57,10 @@
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="{% url 'learnindex' %}">单词学习</a></li>
-                <li><a href="{% url 'mywordbook' %}">我的单词本</a></li>
-                <li><a href="{% url 'wordbook' %}">单词本</a></li>
+                <li><a href="{% url 'learn:learnindex' %}">单词学习</a></li>
+                <li><a href="{% url 'learn:mywordbook' %}">我的单词本</a></li>
+                <li><a href="{% url 'learn:wordbook' %}">单词本</a></li>
+                <li><a href="{% url 'learn:voctest' %}">单词考核</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <div class="btn-group">
@@ -67,10 +68,10 @@
                 {{username}} <span class="caret"></span>
               </button>
               <ul class="dropdown-menu">
-                <li><a href="{% url 'mywordbook' %}">我的单词本</a></li>
-                <li><a href="{% url 'mywords' %}">自定义单词</a></li>
+                <li><a href="{% url 'learn:mywordbook' %}">我的单词本</a></li>
+                <li><a href="{% url 'learn:mywords' %}">自定义单词</a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="{% url 'bdcsetting' %}">设置</a></li>
+                <li><a href="{% url 'learn:bdcsetting' %}">设置</a></li>
                 <li><a href="#">退出</a></li>
               </ul>
             </div>
@@ -103,7 +104,7 @@
                                     <td>
                                         <div id="planning-active-user-wordbook">
                                             Magoosh GRE 词卡
-                                            <span><a href="{% url 'mywordbook' %}">更改</a></span>
+                                            <span><a href="{% url 'learn:mywordbook' %}">更改</a></span>
                                         </div>
                                     </td>
                                 </tr>
@@ -150,14 +151,14 @@
                         </table>
                                 <td colspan="2" class="btn">
                                     <button class="btn btn-success" type="submit">确定</button>
-                                        &nbsp;&nbsp;<a href="{% url 'wordbook' %}" class="cancel">取消</a>
+                                        &nbsp;&nbsp;<a href="{% url 'learn:wordbook' %}" class="cancel">取消</a>
                                 </td>
                     </form>
                 </div>
                 <div class="col-sm-4">
                     <ul class="nav nav-tabs nav-stacked">
                         <li class="active"><a href="#">背单词设置</a></li>
-                        <li class="info "><a href="/accounts/setting/">帐号设置</a></li>
+                        <li class="info "><a href="#">账号设置</a></li>
                     </ul>
                 </div>
             </div>
@@ -183,7 +184,5 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>

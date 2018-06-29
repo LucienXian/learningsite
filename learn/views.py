@@ -1,11 +1,13 @@
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 from .models import *
 from learn.constants import *
 
 from django.contrib.auth.models import User
+from django.contrib.auth import logout
+from django.urls import reverse
 # Create your views here.
 
 import datetime
@@ -37,8 +39,9 @@ def get_all_books():
         wordbook_info.append(info)
     return wordbook_info
 
-# @login_required
+@login_required
 def wordbook(request):
+    user = request.user
     all_wordbooks = WordBook.objects.all()
     wordbook_info = []
     for wordbook in all_wordbooks:
@@ -49,13 +52,14 @@ def wordbook(request):
         info['word_num'] = wordbook.word_num
         info['wordbook_id'] = wordbook.id
         wordbook_info.append(info)
-        user_name = wordbook.uploaded_user.username
+        user_name = user.username
     return render(request, 'workbook.html', {'data': wordbook_info, 'username': user_name})
 
-# @login_required
+@login_required
 def wordbookunit(request):
     passed = {}
     passed['wordbook_info'] = get_all_books()
+    user = request.user
     if request.method == "GET":
         if 'id' in request.GET:
             all_words_num = 0
@@ -65,9 +69,9 @@ def wordbookunit(request):
             passed['description'] = get_book.description
             #passed['word_num'] = get_book.word_num
             passed['uploaded_user'] = get_book.uploaded_user.username
-            passed['username'] = get_book.uploaded_user.username
+            passed['username'] = user.username
             wordbookunit = WordUnit.objects.filter(book=get_book)
-            if LearningPlan.objects.filter(user=get_book.uploaded_user, wordbook=get_book).count() > 0:
+            if LearningPlan.objects.filter(user=user, wordbook=get_book).count() > 0:
                 passed['save_button_name'] = SAVE_BUTTON[1]
             else:
                 passed['save_button_name'] = SAVE_BUTTON[0]
@@ -85,25 +89,36 @@ def wordbookunit(request):
     if request.method == 'POST':
         value = request.POST.get('value', None)
         get_book = WordBook.objects.get(id=int(value))
-        if LearningPlan.objects.filter(user=get_book.uploaded_user, wordbook=get_book).count() > 0:
-            LearningPlan.objects.get(user=get_book.uploaded_user, wordbook=get_book).delete()
+        if LearningPlan.objects.filter(user=user, wordbook=get_book).count() > 0:
+            LearningPlan.objects.get(user=user, wordbook=get_book).delete()
+            lr = LearningRecord.objects.get(user=user, wordbook=get_book)
+            lr.islearning = 0
+            lr.save()
         else:
-            lp = LearningPlan(user=get_book.uploaded_user, wordbook=get_book)
+            lp = LearningPlan(user=user, wordbook=get_book)
             lp.save()
-            if LearningRecord.objects.filter(user=get_book.uploaded_user, wordbook=get_book).count() == 0:
-                lr = LearningRecord(user=get_book.uploaded_user, wordbook=get_book)
-                if LearningRecord.objects.filter(user=get_book.uploaded_user, islearning=1).count() == 0:
+            if LearningRecord.objects.filter(user=user, wordbook=get_book).count() == 0:
+                lr = LearningRecord(user=user, wordbook=get_book)
+                if LearningRecord.objects.filter(user=user, islearning=1).count() == 0:
                     lr.islearning = 1
                 lr.save()
-        ctx = {'message': get_book.uploaded_user.username}
+            else:
+                r = LearningRecord.objects.get(user=user, islearning=1)
+                r.islearning = 0
+                r.save()
+                lr = LearningRecord.objects.get(user=user, wordbook=get_book)
+                lr.islearning = 1
+                lr.save()
+        ctx = {'message': user.username}
         return HttpResponse(json.dumps(ctx), content_type='application/json')
         #plan = LearningPlan(user=get_book.uploaded_user,wordbook=get_book)
         #plan.save()
     return render(request, 'wordbookunit.html', passed)
 
-# @login_required
+@login_required
 def wordlist(request):
     passed = {}
+    user = request.user
     passed['wordbook_info'] = get_all_books()
     if request.method == "GET":
         if 'id' in request.GET:
@@ -114,7 +129,7 @@ def wordlist(request):
             passed['unit'] = 'unit' + str(get_unit.unit_order)
             passed['word_num'] = get_unit.word_num
             passed['uploaded_user'] = get_book.uploaded_user.username
-            passed['username'] = get_book.uploaded_user.username
+            passed['username'] = user.username
             passed['wordbook_id'] = get_book.id
             all_words = WordInUnit.objects.filter(wordunit=get_unit)
             
@@ -128,29 +143,27 @@ def wordlist(request):
     return render(request, 'wordlist.html', passed)
 
 
-#@login_required
+@login_required
 def mywordbook(request):
     passed = {}
-    user = User.objects.get(username=XTF)
+    user = request.user
     passed['username'] = user.username
     passed['wordbook_info'] = get_all_books()
 
     #pdb.set_trace()
     print(request.method)
     if request.method == 'POST' and request.is_ajax():
-        value = request.POST.get('value', None)
-        get_book = WordBook.objects.get(id=int(value))
-        changedrecord = LearningRecord.objects.get(user=user, wordbook=get_book)
-        changedrecord.islearning = 1
-        changedrecord.save()
-
         learning_id = request.POST.get('learning_id', None)
         learning_book = WordBook.objects.get(id=int(learning_id))
         learningrecord = LearningRecord.objects.get(user=user, wordbook=learning_book)
         learningrecord.islearning = 0
         learningrecord.save()
 
-        #ctx = {'message': 'success'}
+        value = request.POST.get('value', None)
+        get_book = WordBook.objects.get(id=int(value))
+        changedrecord = LearningRecord.objects.get(user=user, wordbook=get_book)
+        changedrecord.islearning = 1
+        changedrecord.save()
 
     userplans = LearningPlan.objects.filter(user=user)
     plan_books = []
@@ -159,10 +172,11 @@ def mywordbook(request):
         if record.islearning:
             passed['learningbook'] = plan.wordbook.title
             passed['learningbook_num'] = plan.wordbook.word_num
-            passed['learningbook_rate'] = "%.3f" % (record.haslearned/plan.wordbook.word_num)
+            passed['learningbook_rate'] = 0 if plan.wordbook.word_num == 0 else "%.3f" % (record.haslearned/plan.wordbook.word_num)
             passed['learning_book_time'] = record.learn_time
+            passed['learning_book_score'] = "%.3f" % record.correct_rate
             passed['learningbook_id'] = plan.wordbook.id
-            continue
+            #continue
         info = {}
         info['title'] = plan.wordbook.title
         info['num'] = plan.wordbook.word_num
@@ -180,25 +194,29 @@ def mywordbook(request):
     else:
         return HttpResponse(json.dumps(passed, cls=DateEncoder), content_type='application/json')
 
+@login_required
 def learnindex(request):
-    user = User.objects.get(username=XTF)
-    lr = LearningRecord.objects.get(user=user, islearning=1)
-    learningbook = lr.wordbook
+    user = request.user
     passed = {}
     passed['username'] = user.username
-    passed['title'] = learningbook.title
-    passed['description'] = learningbook.description
-    passed['word_num'] = learningbook.word_num
-    passed['uploaded_user'] = learningbook.uploaded_user
-    
-    setting = UserSetting.objects.get(user=user)
-    passed['plan_num'] = setting.dailyword
-    passed['learned_num'] = lr.haslearned
+    if LearningRecord.objects.filter(user=user, islearning=1).count() == 1:
+        lr = LearningRecord.objects.get(user=user, islearning=1)
+        learningbook = lr.wordbook
+        
+        passed['title'] = learningbook.title
+        passed['description'] = learningbook.description
+        passed['word_num'] = learningbook.word_num
+        passed['uploaded_user'] = learningbook.uploaded_user
+        
+        setting = UserSetting.objects.get(user=user)
+        passed['plan_num'] = setting.dailyword
+        passed['learned_num'] = lr.haslearned
 
     return render(request, "learnindex.html", passed)
 
+@login_required
 def bdcsetting(request):
-    user = User.objects.get(username=XTF)
+    user = request.user
     usersetting = UserSetting.objects.get(user=user)
     ctx = {}
     ctx['username'] = user.username
@@ -225,8 +243,9 @@ def bdcsetting(request):
 
     return render(request, "bdcsetting.html", ctx)
 
+@login_required
 def learnwords(request):
-    user = User.objects.get(username=XTF)
+    user = request.user
     if request.method == 'POST' and request.is_ajax():
         lr = LearningRecord.objects.get(user=user, islearning=1)
         lr.haslearned += 1
@@ -261,9 +280,10 @@ def learnwords(request):
     ctx['data'] = data
     return render(request, "learnwords.html", ctx)
 
+@login_required
 def mywords(request):
     ctx = {}
-    user = User.objects.get(username=XTF)
+    user = request.user
     ctx['username'] = user.username
     uds = UserDefWords.objects.filter(user=user)
     words_list = []
@@ -277,9 +297,10 @@ def mywords(request):
 
     return render(request, "mywords.html", ctx)
 
+@login_required
 def handleselfword(request):
     ctx = {}
-    user = User.objects.get(username=XTF)
+    user = request.user
     if request.method == 'POST' and request.is_ajax():
         spell = request.POST.get('name', None)
         mean = request.POST.get('mean', None)
@@ -292,3 +313,59 @@ def handleselfword(request):
         else:
             ctx['msg'] = "写入失败！输入框不能为空"
     return HttpResponse(json.dumps(ctx, cls=DateEncoder), content_type='application/json')
+
+@login_required
+def voctest(request):
+    ctx = {}
+    user = request.user
+    ctx['username'] = user.username
+    lr = LearningRecord.objects.get(user=user, islearning=1)
+    if request.method == 'GET':
+        import random
+        learningbook = lr.wordbook
+        ctx['bookname'] = learningbook.title
+        units = WordUnit.objects.filter(book=learningbook)
+        chooceunit = random.randint(0, units.count()-1)
+        getunit = units[chooceunit]
+
+        words = WordInUnit.objects.filter(wordunit=getunit)
+        data = []
+        if words.count() > TEST_NUM:
+            rand_words = random.sample(range(words.count()), TEST_NUM)
+            for i in rand_words:
+                #print(words[i].word.spelling)
+                info={}
+                info['mean'] = words[i].word.meaning
+                info['id'] = words[i].word.id
+                # print(info['id'])
+                data.append(info)
+            ctx['data'] = data
+            ctx['testnum'] = TEST_NUM
+        else:
+            for w in words:
+                # print(w.word.spelling)
+                info={}
+                info['mean'] = words[i].word.meaning
+                info['id'] = words[i].word.id
+                data.append(info)
+            ctx['data'] = data
+            ctx['testnum'] = words.count()
+        return render(request, "voctest.html", ctx)
+    if request.method == 'POST':
+        correct = 0
+        ids = request.POST.getlist('id', None)
+        spellings = request.POST.getlist('spelling', None)
+        for i, s in zip(ids, spellings):
+            real_word = Word.objects.get(id=int(i)).spelling
+            ans_spell = s
+            if real_word == ans_spell.strip():
+                correct += 1
+        #print(ids)
+            lr.correct_rate = int(correct/TEST_NUM)
+            lr.save()
+        return redirect('mywordbook')
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('account:index'))

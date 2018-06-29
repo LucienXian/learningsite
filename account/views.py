@@ -1,4 +1,4 @@
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response, redirect
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
@@ -27,7 +27,7 @@ def login(request):
                 if ps_bool:
                     auth.login(request, p)
                     request.session['username'] = p.username
-                    return render(request,'success.html',{'operation':"登录"})
+                    return redirect('learn:mywordbook')
                 else:
                     return render(request,'login.html',{"errors":"密码错误"})
             else:
