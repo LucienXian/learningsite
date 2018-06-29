@@ -40,7 +40,6 @@
   </head>
 
   <body>
-
     <div class="container">
 
       <!-- Static navbar -->
@@ -83,54 +82,57 @@
 
     </div> <!-- /container -->
 
-    <div class="container">    
-            <div class="row">
-              <div class="col-sm-4">
-                  <div class="panel panel-default">
-                      <div class="panel-heading">
-                        <h3 class="panel-title">
-                          带有 title 的面板标题
-                        </h3>
-                      </div>
-                      <div class="panel-body">
-                        面板内容
-                        <button class="pull-right">
-                          学习
-                        </button>
-                      </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 col-md-8">
+              {% for d in data %}  
+                  <div class="row">
+                    <div class="col-sm-6 col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                              <h3 class="panel-title">
+                                {{bookname}}
+                              </h3>
+                            </div>
+                            <div class="panel-body">
+                              {{d.word1_name}}
+                              <button class="btn btn-success pull-right disable" id="learn-button{{d.word1_id}}" value="{{d.word1_id}}">
+                                学习
+                              </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                              <h3 class="panel-title">
+                                  {{bookname}}
+                              </h3>
+                            </div>
+                            <div class="panel-body">
+                                {{d.word2_name}}
+                              <button class="btn btn-success pull-right disable" id="learn-button{{d.word1_id}}" value="{{d.word1_id}}">
+                                学习
+                              </button>
+                            </div>
+                        </div>
+                    </div>
+                    
                   </div>
-              </div>
-              <div class="col-sm-4">
-                  <div class="panel panel-default">
-                      <div class="panel-heading">
-                        <h3 class="panel-title">
-                          带有 title 的面板标题
-                        </h3>
-                      </div>
-                      <div class="panel-body">
-                        面板内容
-                        <button class="pull-right">
-                          学习
-                        </button>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-sm-4">
-                  <div class="panel panel-default">
-                      <div class="panel-heading">
-                        <h3 class="panel-title">
-                          带有 title 的面板标题
-                        </h3>
-                      </div>
-                      <div class="panel-body">
-                        <button class="pull-right">
-                          学习
-                        </button>
-                      </div>
-                  </div>
-              </div>
+                  <!-- /.row -->
+              {% endfor %}
             </div>
-            <!-- /.row -->
+            <div class="col-sm-4 col-md-4">
+                <div class="page-header">
+                    <h3>维护自定义单词</h3>
+                </div>
+                <span class="hide" id="current-category-id">30</span>
+                <ul class="nav nav-tabs nav-stacked">
+                    <li data="10"><a href="#">查看自定义单词</a></li>
+                    <li data="10"><a href="#" data-toggle="modal" data-target="#exampleModal" data-whatever="NewWord">添加自定义单词</a></li>
+                </ul>
+            </div>
+        </div>
             <hr>
             <!-- Footer -->
             <footer>
@@ -141,11 +143,35 @@
                 </div>
                 <!-- /.row -->
             </footer>
-    
+        
         </div>
         <!-- /.container -->
 
-
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="exampleModalLabel">添加自定义单词</h4>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="recipient-name" class="control-label">Spelling:</label>
+                  <input type="text" class="form-control" id="recipient-name">
+                </div>
+                <div class="form-group">
+                  <label for="message-text" class="control-label">Meaning:</label>
+                  <textarea class="form-control" id="message-text"></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="save-btn">Save</button>
+            </div>
+          </div>
+        </div>        
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -154,5 +180,81 @@
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+    <!-- <script type="text/javascript">
+      $('.disable').click(function(){
+        $(this).prop('disabled', true);
+      });
+    </script>
+    -->
+    {% for d in data %}
+    <script>
+        $('#learn-button{{d.word1_id}}').click(function(){
+              $.ajax({
+                        type: "POST",
+                        url: "{% url 'learnwords' %}",
+                        data: {'value': $('this').attr('value'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                        dataType: "json",
+                        success: function(response) {
+                          $('.disable').click(function(){
+                            $(this).prop('disabled', true);
+                          });
+                        },
+                        error: function(rs, e) {
+                               alert(rs.responseText);
+                        }
+                  }); 
+            })
+    </script>
+    <script>
+        $('#learn-button{{d.word2_id}}').click(function(){
+              $.ajax({
+                        type: "POST",
+                        url: "{% url 'learnwords' %}",
+                        data: {'value': $(this).attr('value'), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                        dataType: "json",
+                        success: function(response) {
+                          $('.disable').click(function(){
+                            $(this).prop('disabled', true);
+                          });
+                        },
+                        error: function(rs, e) {
+                               alert(rs.responseText);
+                        }
+                  }); 
+            })
+    </script>
+    {% endfor %}
+    <script>
+        $(function() {
+            $('#myModal{{book.book_id}}').modal('hide')
+        });
+    </script>
+    <script>
+        $('#exampleModal').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget) // Button that triggered the modal
+          var recipient = button.data('whatever') // Extract info from data-* attributes
+          // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+          // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+          var modal = $(this)
+          modal.find('.modal-title').text('自定义单词：' + recipient)
+          modal.find('.modal-body input').val(recipient)
+        })
+    </script>
+    <script>
+        $('#save-btn').click(function(){
+              $.ajax({
+                        type: "POST",
+                        url: "{% url 'selfword' %}",
+                        data: {'name': $('#recipient-name').val(), 'mean': $('#message-text').val(), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                        dataType: "json",
+                        success: function(response) {
+                          alert(response.msg);
+                        },
+                        error: function(rs, e) {
+                            alert(rs.responseText);
+                        }
+                  }); 
+            })
+    </script>
   </body>
 </html>

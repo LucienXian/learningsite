@@ -116,3 +116,17 @@ class UserSetting(models.Model):
 
     def __unicode__(self):
         return u"{0} - {1}".format(self.user.username, self.dailyword)
+
+class UserDefWords(models.Model):
+    user = models.ForeignKey(User, verbose_name=u"用户", on_delete=models.CASCADE)
+    word = models.ForeignKey(Word, verbose_name = u"单词", on_delete=models.DO_NOTHING)
+    
+    class Meta:
+        verbose_name = u"用户自定义单词"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.__unicode__()
+
+    def __unicode__(self):
+        return u"{0} - {1}".format(self.user.username, self.word.spelling)

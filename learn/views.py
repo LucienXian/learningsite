@@ -2,7 +2,7 @@ from django.shortcuts import render, render_to_response
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
-from .models import WordBook, WordUnit, WordInUnit, LearningPlan, LearningRecord, UserSetting
+from .models import *
 from learn.constants import *
 
 from django.contrib.auth.models import User
@@ -159,14 +159,17 @@ def mywordbook(request):
         if record.islearning:
             passed['learningbook'] = plan.wordbook.title
             passed['learningbook_num'] = plan.wordbook.word_num
-            passed['learningbook_rate'] = float(0)
+            passed['learningbook_rate'] = "%.3f" % (record.haslearned/plan.wordbook.word_num)
             passed['learning_book_time'] = record.learn_time
             passed['learningbook_id'] = plan.wordbook.id
             continue
         info = {}
         info['title'] = plan.wordbook.title
         info['num'] = plan.wordbook.word_num
-        info['rate'] = float(0)
+        if plan.wordbook.word_num == 0:
+            info['rate'] = float(0)
+        else:
+            info['rate'] = "%.3f" % (record.haslearned/plan.wordbook.word_num)
         info['book_id'] = plan.wordbook.id
         plan_books.append(info)
     passed['plan_book'] = plan_books
@@ -221,3 +224,55 @@ def bdcsetting(request):
     ctx['learntype'] = usersetting.learntype
 
     return render(request, "bdcsetting.html", ctx)
+
+def learnwords(request):
+    user = User.objects.get(username=XTF)
+    if request.method == 'POST' and request.is_ajax():
+        lr = LearningRecord.objects.get(user=user, islearning=1)
+        lr.haslearned += 1
+        lr.save()
+        return HttpResponse(json.dumps({}, cls=DateEncoder), content_type='application/json')
+    ctx = {} 
+    ctx['username'] = user.username
+    learningbook = LearningRecord.objects.get(user=user, islearning=1).wordbook
+    ctx['bookname'] = learningbook.title
+    units = WordUnit.objects.filter(book=learningbook)
+    words = []
+    for unit in units:
+        wordinunits = WordInUnit.objects.filter(wordunit=unit)
+        for w_u in wordinunits:
+            words.append(w_u.word)
+    usersetting = UserSetting.objects.get(user=user)
+    haslearned = LearningRecord.objects.get(user=user, islearning=1).haslearned
+    dailyword = usersetting.dailyword
+
+    data = []
+    for i in range(haslearned,haslearned+dailyword,2):
+        info = {}
+        if usersetting.showmeaning == 1:
+            info['word1_name'] = words[i].spelling
+            info['word2_name'] = words[i+1].spelling
+        else:
+            info['word1_name'] = words[i].spelling + ': ' + words[i].meaning
+            info['word2_name'] = words[i+1].spelling + ': ' + words[i+1].meaning
+        info['word1_id'] = words[i].id
+        info['word2_id'] = words[i+1].id
+        data.append(info)
+    ctx['data'] = data
+    return render(request, "learnwords.html", ctx)
+
+def handleselfword(request):
+    ctx = {}
+    user = User.objects.get(username=XTF)
+    if request.method == 'POST' and request.is_ajax():
+        spell = request.POST.get('name', None)
+        mean = request.POST.get('mean', None)
+        if spell and mean:
+            word = Word(spelling=spell, meaning=mean)
+            word.save()
+            ud = UserDefWords(user=user, word=word)
+            ud.save()
+            ctx['msg'] = "写入成功!" + request.POST.get('name', None) + ": " + request.POST.get('mean', None)
+        else:
+            ctx['msg'] = "写入失败！输入框不能为空"
+    return HttpResponse(json.dumps(ctx, cls=DateEncoder), content_type='application/json')

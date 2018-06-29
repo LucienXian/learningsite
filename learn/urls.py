@@ -9,4 +9,6 @@ urlpatterns = [
     path('wordbook/mine', views.mywordbook, name='mywordbook'),
     path('learnindex/', views.learnindex, name='learnindex'),
     path('bdcsetting/', views.bdcsetting, name='bdcsetting'),
+    path('learnindex/learnwords', views.learnwords, name='learnwords'),
+    path('handleselfword/', views.handleselfword, name='selfword'),
 ]
