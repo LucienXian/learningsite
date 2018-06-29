@@ -11,4 +11,5 @@ urlpatterns = [
     path('bdcsetting/', views.bdcsetting, name='bdcsetting'),
     path('learnindex/learnwords', views.learnwords, name='learnwords'),
     path('handleselfword/', views.handleselfword, name='selfword'),
+    path('mywords/', views.mywords, name='mywords'),
 ]

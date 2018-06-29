@@ -261,6 +261,22 @@ def learnwords(request):
     ctx['data'] = data
     return render(request, "learnwords.html", ctx)
 
+def mywords(request):
+    ctx = {}
+    user = User.objects.get(username=XTF)
+    ctx['username'] = user.username
+    uds = UserDefWords.objects.filter(user=user)
+    words_list = []
+    for ud in uds:
+        word_info = {}
+        word_info['spelling'] = ud.word.spelling
+        word_info['mean'] = ud.word.meaning
+        words_list.append(word_info)
+    ctx['all_words'] = words_list
+    ctx['wordbook_info'] = get_all_books()
+
+    return render(request, "mywords.html", ctx)
+
 def handleselfword(request):
     ctx = {}
     user = User.objects.get(username=XTF)
