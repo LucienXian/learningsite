@@ -1,0 +1,8 @@
+BEGIN;
+--
+-- Create model UserDefWords
+--
+CREATE TABLE "learn_userdefwords" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "user_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "word_id" integer NOT NULL REFERENCES "learn_word" ("id") DEFERRABLE INITIALLY DEFERRED);
+CREATE INDEX "learn_userdefwords_user_id_984df712" ON "learn_userdefwords" ("user_id");
+CREATE INDEX "learn_userdefwords_word_id_4143e32f" ON "learn_userdefwords" ("word_id");
+COMMIT;

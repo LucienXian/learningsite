@@ -1,0 +1,10 @@
+BEGIN;
+--
+-- Alter field learntype on usersetting
+--
+ALTER TABLE "learn_usersetting" RENAME TO "learn_usersetting__old";
+CREATE TABLE "learn_usersetting" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "learntype" integer NOT NULL, "dailyword" integer NOT NULL, "user_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "showmeaning" integer NOT NULL);
+INSERT INTO "learn_usersetting" ("user_id", "learntype", "showmeaning", "id", "dailyword") SELECT "user_id", "learntype", "showmeaning", "id", "dailyword" FROM "learn_usersetting__old";
+DROP TABLE "learn_usersetting__old";
+CREATE INDEX "learn_usersetting_user_id_59b1e33d" ON "learn_usersetting" ("user_id");
+COMMIT;

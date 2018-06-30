@@ -253,6 +253,8 @@ def learnwords(request):
         return HttpResponse(json.dumps({}, cls=DateEncoder), content_type='application/json')
     ctx = {} 
     ctx['username'] = user.username
+    if LearningRecord.objects.filter(user=user, islearning=1).count() != 1:
+        return redirect('learn:mywordbook')
     learningbook = LearningRecord.objects.get(user=user, islearning=1).wordbook
     ctx['bookname'] = learningbook.title
     units = WordUnit.objects.filter(book=learningbook)
@@ -319,6 +321,8 @@ def voctest(request):
     ctx = {}
     user = request.user
     ctx['username'] = user.username
+    if LearningRecord.objects.filter(user=user, islearning=1).count() != 1:
+        return redirect('learn:mywordbook')
     lr = LearningRecord.objects.get(user=user, islearning=1)
     if request.method == 'GET':
         import random
@@ -363,7 +367,7 @@ def voctest(request):
         #print(ids)
             lr.correct_rate = int(correct/TEST_NUM)
             lr.save()
-        return redirect('mywordbook')
+        return redirect('learn:mywordbook')
 
 @login_required
 def logout_view(request):

@@ -38,7 +38,8 @@ def get_urls(url_content,root_url="https://www.shanbay.com"):
     urls=soup.find_all('a')  
     for url in urls:  
         try:
-            if url.string.startswith('【无老师7天TOEFL】List'):
+            #if url.string.startswith('【无老师7天TOEFL】List'):
+            if url.string.startswith('研究生入学英语考试-'):
                 ulist.append(root_url+url.get('href'))
                 for j in range(2,11):
                     extend_url = root_url+url.get('href')+'?page='+str(j)
@@ -51,7 +52,7 @@ def get_urls(url_content,root_url="https://www.shanbay.com"):
    
 def save_contents(result):
     d = enchant.Dict("en_US")
-    with codecs.open('tofel.csv', 'w','utf_8_sig') as f:
+    with codecs.open('kaoyan.csv', 'w','utf_8_sig') as f:
         writer = csv.writer(f)
         for i in range(len(result)):
         #    print(result[i][1])W
@@ -66,7 +67,8 @@ def save_contents(result):
 
 
 def main():
-    src_url = "https://www.shanbay.com/wordbook/5440/"
+    #src_url = "https://www.shanbay.com/wordbook/5440/"
+    src_url = "https://www.shanbay.com/wordbook/3/"
     src_content = check_link(src_url)
     urls = get_urls(src_content)
 

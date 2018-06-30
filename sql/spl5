@@ -1,0 +1,25 @@
+BEGIN;
+--
+-- Create model UserSetting
+--
+CREATE TABLE "learn_usersetting" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "dailyword" integer NOT NULL, "user_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Add field haslearned to learningplan
+--
+ALTER TABLE "learn_learningplan" RENAME TO "learn_learningplan__old";
+CREATE TABLE "learn_learningplan" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "user_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "wordbook_id" integer NOT NULL REFERENCES "learn_wordbook" ("id") DEFERRABLE INITIALLY DEFERRED, "haslearned" integer NOT NULL);
+INSERT INTO "learn_learningplan" ("haslearned", "wordbook_id", "id", "user_id") SELECT 0, "wordbook_id", "id", "user_id" FROM "learn_learningplan__old";
+DROP TABLE "learn_learningplan__old";
+CREATE INDEX "learn_usersetting_user_id_59b1e33d" ON "learn_usersetting" ("user_id");
+CREATE INDEX "learn_learningplan_user_id_771ef2ac" ON "learn_learningplan" ("user_id");
+CREATE INDEX "learn_learningplan_wordbook_id_80ca6e43" ON "learn_learningplan" ("wordbook_id");
+--
+-- Add field haslearned to learningrecord
+--
+ALTER TABLE "learn_learningrecord" RENAME TO "learn_learningrecord__old";
+CREATE TABLE "learn_learningrecord" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "islearning" integer NOT NULL, "learn_time" datetime NOT NULL, "duration" integer NOT NULL, "correct_rate" integer NOT NULL, "user_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "wordbook_id" integer NOT NULL REFERENCES "learn_wordbook" ("id") DEFERRABLE INITIALLY DEFERRED, "haslearned" integer NOT NULL);
+INSERT INTO "learn_learningrecord" ("duration", "learn_time", "correct_rate", "islearning", "haslearned", "id", "user_id", "wordbook_id") SELECT "duration", "learn_time", "correct_rate", "islearning", 0, "id", "user_id", "wordbook_id" FROM "learn_learningrecord__old";
+DROP TABLE "learn_learningrecord__old";
+CREATE INDEX "learn_learningrecord_user_id_142ee333" ON "learn_learningrecord" ("user_id");
+CREATE INDEX "learn_learningrecord_wordbook_id_906cae2e" ON "learn_learningrecord" ("wordbook_id");
+COMMIT;

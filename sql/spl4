@@ -1,0 +1,8 @@
+BEGIN;
+--
+-- Create model LearningRecord
+--
+CREATE TABLE "learn_learningrecord" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "islearning" integer NOT NULL, "learn_time" datetime NOT NULL, "duration" integer NOT NULL, "correct_rate" integer NOT NULL, "user_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "wordbook_id" integer NOT NULL REFERENCES "learn_wordbook" ("id") DEFERRABLE INITIALLY DEFERRED);
+CREATE INDEX "learn_learningrecord_user_id_142ee333" ON "learn_learningrecord" ("user_id");
+CREATE INDEX "learn_learningrecord_wordbook_id_906cae2e" ON "learn_learningrecord" ("wordbook_id");
+COMMIT;

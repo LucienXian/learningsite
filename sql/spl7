@@ -1,0 +1,11 @@
+BEGIN;
+--
+-- Remove field haslearned from learningplan
+--
+ALTER TABLE "learn_learningplan" RENAME TO "learn_learningplan__old";
+CREATE TABLE "learn_learningplan" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "user_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "wordbook_id" integer NOT NULL REFERENCES "learn_wordbook" ("id") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO "learn_learningplan" ("user_id", "id", "wordbook_id") SELECT "user_id", "id", "wordbook_id" FROM "learn_learningplan__old";
+DROP TABLE "learn_learningplan__old";
+CREATE INDEX "learn_learningplan_user_id_771ef2ac" ON "learn_learningplan" ("user_id");
+CREATE INDEX "learn_learningplan_wordbook_id_80ca6e43" ON "learn_learningplan" ("wordbook_id");
+COMMIT;

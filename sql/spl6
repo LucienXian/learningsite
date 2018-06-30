@@ -1,0 +1,18 @@
+BEGIN;
+--
+-- Add field learntype to usersetting
+--
+ALTER TABLE "learn_usersetting" RENAME TO "learn_usersetting__old";
+CREATE TABLE "learn_usersetting" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "learntype" integer NOT NULL, "dailyword" integer NOT NULL, "user_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO "learn_usersetting" ("user_id", "dailyword", "learntype", "id") SELECT "user_id", "dailyword", 0, "id" FROM "learn_usersetting__old";
+DROP TABLE "learn_usersetting__old";
+CREATE INDEX "learn_usersetting_user_id_59b1e33d" ON "learn_usersetting" ("user_id");
+--
+-- Add field showmeaning to usersetting
+--
+ALTER TABLE "learn_usersetting" RENAME TO "learn_usersetting__old";
+CREATE TABLE "learn_usersetting" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "dailyword" integer NOT NULL, "user_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "learntype" integer NOT NULL, "showmeaning" integer NOT NULL);
+INSERT INTO "learn_usersetting" ("user_id", "dailyword", "showmeaning", "learntype", "id") SELECT "user_id", "dailyword", 1, "learntype", "id" FROM "learn_usersetting__old";
+DROP TABLE "learn_usersetting__old";
+CREATE INDEX "learn_usersetting_user_id_59b1e33d" ON "learn_usersetting" ("user_id");
+COMMIT;

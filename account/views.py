@@ -38,7 +38,7 @@ def login(request):
         return render(request, 'login.html')
 
 def register(request):
-    message = "请检查填写的内容！"
+    message = "请检查填写的内容！注意邮箱格式和密码长度至少6位"
     #pdb.set_trace()
     if request.method == 'POST':
         #pdb.set_trace()
@@ -62,7 +62,7 @@ def register(request):
             setting.save()
             return render(request,'success.html',{'operation':"注册"})
         else:
-            return render(request,'register.html',{'form': message})
+            return render(request,'register.html',{'errors': message})
     else:
         return render(request, 'register.html')
 

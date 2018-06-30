@@ -1,0 +1,29 @@
+BEGIN;
+--
+-- Create model Word
+--
+CREATE TABLE "learn_word" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "spelling" varchar(100) NOT NULL, "meaning" varchar(300) NOT NULL, "mp3_url" varchar(200) NOT NULL);
+--
+-- Create model WordBook
+--
+CREATE TABLE "learn_wordbook" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "title" varchar(50) NOT NULL, "description" varchar(200) NOT NULL, "word_num" integer NOT NULL, "uploaded_user_id" integer NOT NULL REFERENCES "account_user" ("id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model WordInUnit
+--
+CREATE TABLE "learn_wordinunit" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "word_order" integer NOT NULL, "word_id" integer NOT NULL REFERENCES "learn_word" ("id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model WordUnit
+--
+CREATE TABLE "learn_wordunit" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "unit_order" integer NOT NULL, "word_num" integer NOT NULL, "book_id" integer NOT NULL REFERENCES "learn_wordbook" ("id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Add field wordunit to wordinunit
+--
+ALTER TABLE "learn_wordinunit" RENAME TO "learn_wordinunit__old";
+CREATE TABLE "learn_wordinunit" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "word_order" integer NOT NULL, "word_id" integer NOT NULL REFERENCES "learn_word" ("id") DEFERRABLE INITIALLY DEFERRED, "wordunit_id" integer NOT NULL REFERENCES "learn_wordunit" ("id") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO "learn_wordinunit" ("word_id", "id", "word_order", "wordunit_id") SELECT "word_id", "id", "word_order", NULL FROM "learn_wordinunit__old";
+DROP TABLE "learn_wordinunit__old";
+CREATE INDEX "learn_wordbook_uploaded_user_id_990ccff9" ON "learn_wordbook" ("uploaded_user_id");
+CREATE INDEX "learn_wordunit_book_id_2f0567c5" ON "learn_wordunit" ("book_id");
+CREATE INDEX "learn_wordinunit_word_id_7aea723f" ON "learn_wordinunit" ("word_id");
+CREATE INDEX "learn_wordinunit_wordunit_id_437ed410" ON "learn_wordinunit" ("wordunit_id");
+COMMIT;
